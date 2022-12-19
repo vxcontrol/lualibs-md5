@@ -16,20 +16,20 @@ typedef struct {
 	uint32_t block[16];
 } MD5_CTX;
 
-void MD5_Init(MD5_CTX *ctx);
-void MD5_Update(MD5_CTX *ctx, const uint8_t *data, uint32_t size);
-void MD5_Final(const uint8_t *result, MD5_CTX *ctx);
+void MD5_Init_n(MD5_CTX *ctx);
+void MD5_Update_n(MD5_CTX *ctx, const uint8_t *data, uint32_t size);
+void MD5_Final_n(const uint8_t *result, MD5_CTX *ctx);
 ]]
 
 local function digest()
 	local ctx = ffi.new'MD5_CTX'
 	local result = ffi.new'uint8_t[16]'
-	C.MD5_Init(ctx)
+	C.MD5_Init_n(ctx)
 	return function(data, size)
 		if data then
-			C.MD5_Update(ctx, data, size or #data)
+			C.MD5_Update_n(ctx, data, size or #data)
 		else
-			C.MD5_Final(result, ctx)
+			C.MD5_Final_n(result, ctx)
 			return ffi.string(result, 16)
 		end
 	end
